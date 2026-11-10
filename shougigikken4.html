@@ -397,9 +397,9 @@
 		<div style="background: #e8f4fd; border: 1px solid #bbe1fa; border-radius: 6px; padding: 18px; margin-bottom: 25px;">
 			<p style="margin: 0 0 10px 0; font-weight: bold; color: #004085; font-size: 16px;">📌 実験終了後の重要なお願い</p>
 			<ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #004085; line-height: 1.8;">
-				<li>全30問の回答が終了すると、自動的に<strong>データ送信画面</strong>が表示されます。必ず送信ボタンを押して、回答結果をスプレッドシートへ送信してください。[cite: 13]</li>
-				<li>データ送信が完了したことを確認の上、表示される<strong>回答一覧画面のスクリーンショット</strong>を撮影して保存してください。[cite: 13]</li>
-				<li style="margin-top: 6px; color: #003366;">※ここに掲載されている画像や回答一覧などの表示はすべて見本となります。[cite: 13]</li>
+				<li>全30問の回答が終了すると、自動的に<strong>データ送信画面</strong>が表示されます。必ず送信ボタンを押して、回答結果をスプレッドシートへ送信してください。</li>
+				<li>データ送信が完了したことを確認の上、表示される<strong>回答一覧画面のスクリーンショット</strong>を撮影して保存してください。</li>
+				<li style="margin-top: 6px; color: #003366;">※ここに掲載されている画像や回答一覧などの表示はすべて見本となります。</li>
 			</ul>
 		</div>
 
@@ -427,12 +427,12 @@
 			<label><strong>お名前識別コード（ローマ字で姓・名の頭2文字ずつ）:</strong></label>
 			<input type="text" id="subject-id" placeholder="例: yata（山田太郎の場合）">
 			<p style="font-size: 12px; color: #666; margin-top: 4px; margin-bottom: 0;">
-				※被験者別のデータを識別するため、お名前をローマ字にした際の「姓の頭2文字 ＋ 名の頭2文字」を小文字でご入力ください（例：山田太郎 ➔ yata）。[cite: 13]
+				※被験者別のデータを識別するため、お名前をローマ字にした際の「姓の頭2文字 ＋ 名の頭2文字」を小文字でご入力ください（例：山田太郎 ➔ yata）。
 			</p>
 		</div>
 
 		<div class="form-group">
-			<label><strong>あなたの普段よく使う将棋アプリを教えてください（複数選択可）。</strong></label>[cite: 13]
+			<label><strong>あなたの普段よく使う将棋アプリを教えてください（複数選択可）。</strong></label>
 			<div class="checkbox-group" style="margin-top: 10px;">
 				<label><input type="checkbox" name="app-checkbox" value="将棋クエスト" onchange="updateRankInputs()"> 将棋クエスト</label>
 				<label><input type="checkbox" name="app-checkbox" value="将棋ウォーズ" onchange="updateRankInputs()"> 将棋ウォーズ</label>
@@ -461,11 +461,11 @@
 		<div class="part-badge">第4部 (4/4)</div>
 		<h2>形勢判断の基準に関するアンケート (2/3)</h2>
 		<p style="font-size: 14px; color: #555; margin-bottom: 15px;">
-			Q. 自分と同じレベルの相手と対戦した時「中盤の駒組の段階でほぼ同型（お互いの陣形がほぼ同じであり駒効率の差がない）」と仮定した場合、あなたにとって各判定（有利・優勢・勝勢）に相当する<span style="color: #d9534f; font-weight: bold; text-decoration: underline;">最低限の駒得</span>はどれですか？[cite: 13]
+			Q. 自分と同じレベルの相手と対戦した時「中盤の駒組の段階でほぼ同型（お互いの陣形がほぼ同じであり駒効率の差がない）」と仮定した場合、あなたにとって各判定（有利・優勢・勝勢）に相当する<span style="color: #d9534f; font-weight: bold; text-decoration: underline;">最低限の駒得</span>はどれですか？
 		</p>
 
 		<div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; margin-bottom: 20px; text-align: center;">
-			<p style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px;">【参考例：歩が1枚（持駒または盤面）得している状態のイメージ】</p>[cite: 13]
+			<p style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px;">【参考例：歩が1枚（持駒または盤面）得している状態のイメージ】</p>
 
 			<div style="position: relative; max-width: 320px; margin: 0 auto; background: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 4px;" id="ref-board-wrapper">
 				<div class="sente-vertical" id="ref-sente">▲ 先手</div>
@@ -474,22 +474,22 @@
 			</div>
 
 			<p style="font-size: 12px; color: #666; margin-top: 8px; margin-bottom: 0;">
-				※上記のように、盤面のみだとお互いの陣形に差が全くなく持ち駒の<strong>「歩が1枚だけ多い（得している）」</strong>といった場合の感覚を基準にお答えください。[cite: 13]
+				※上記のように、盤面のみだとお互いの陣形に差が全くなく持ち駒の<strong>「歩が1枚だけ多い（得している）」</strong>といった場合の感覚を基準にお答えください。
 			</p>
 		</div>
 
 		<div class="threshold-box">
-			<label><strong>① 有利</strong>（指しやすい・主導権を握っていると感じる）と感じる境界線：</label>[cite: 13]
+			<label><strong>① 有利</strong>（指しやすい・主導権を握っていると感じる）と感じる境界線：</label>
 			<input type="text" id="thresh-yuri" placeholder="例: 歩2枚,香車1枚 など">
 		</div>
 
 		<div class="threshold-box">
-			<label><strong>② 優勢</strong>（勝ちパターンに入っている）と感じる境界線：</label>[cite: 13]
+			<label><strong>② 優勢</strong>（勝ちパターンに入っている）と感じる境界線：</label>
 			<input type="text" id="thresh-yusei" placeholder="例: 桂1枚,銀1枚 など">
 		</div>
 
 		<div class="threshold-box">
-			<label><strong>③ 勝勢</strong>（ほぼ勝ち）と感じる境界線：</label>[cite: 13]
+			<label><strong>③ 勝勢</strong>（ほぼ勝ち）と感じる境界線：</label>
 			<input type="text" id="thresh-katsusei" placeholder="例: 金1枚、飛車1枚 など">
 		</div>
 
@@ -517,8 +517,8 @@
 
 		<div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 15px; border: 1px solid #dee2e6;">
 			<p><strong>【説明文】</strong></p>
-			<p>上記の画像画面のように将棋のある局面が提示されます。盤面の右上にある「▲ 先手」が先手、左下にある<strong>「△ 後手」</strong>が後手を表します。盤面の真下に表示されているのが駒どくや指し手・手番を表しています。ラジオボタンに先手勝勢〜後手勝勢のいずれかが選択できるようになっているので、局面をみて最も近い局面を選択してください。</p>[cite: 13]
-			<p><strong>例題は2問ありますので、2問やっていただいた後、本実験について回答していただければと思います。</strong></p>[cite: 13]
+			<p>上記の画像画面のように将棋のある局面が提示されます。盤面の右上にある「▲ 先手」が先手、左下にある<strong>「△ 後手」</strong>が後手を表します。盤面の真下に表示されているのが駒どくや指し手・手番を表しています。ラジオボタンに先手勝勢〜後手勝勢のいずれかが選択できるようになっているので、局面をみて最も近い局面を選択してください。</p>
+			<p><strong>例題は2問ありますので、2問やっていただいた後、本実験について回答していただければと思います。</strong></p>
 		</div>
 
 		<div style="text-align: right; margin-top: 20px;">
@@ -542,7 +542,7 @@
 		<div id="practice-komadoku" class="komadoku-display"></div>
 		<div id="practice-sashite" class="sashite-display"></div>
 
-		<p style="text-align: center; font-weight: bold; margin-bottom: 5px;">現在の形勢は？（※選択すると次へ進めます）</p>[cite: 13]
+		<p style="text-align: center; font-weight: bold; margin-bottom: 5px;">現在の形勢は？（※選択すると次へ進めます）</p>
 
 		<div class="radio-group">
 			<label><input type="radio" name="practice-ans" value="先手勝勢" onchange="enableNextButton('practice')">先手勝勢</label>
@@ -588,7 +588,7 @@
 		<div id="exp-komadoku" class="komadoku-display"></div>
 		<div id="exp-sashite" class="sashite-display"></div>
 
-		<p style="text-align: center; font-weight: bold; margin-top: 15px; margin-bottom: 5px;">現在の形勢は？（※選択すると次へ進めます）</p>[cite: 13]
+		<p style="text-align: center; font-weight: bold; margin-top: 15px; margin-bottom: 5px;">現在の形勢は？（※選択すると次へ進めます）</p>
 
 		<div class="radio-group">
 			<label><input type="radio" name="exp-ans" value="先手勝勢" onchange="enableNextButton('exp')">先手勝勢</label>
@@ -610,7 +610,7 @@
 		<div class="part-badge">第4部 (4/4)</div>
 		<h2>実験完了</h2>
 		<p id="status-message" style="font-size: 16px; font-weight: bold; color: #0056b3; margin-top: 20px;">
-			すべての問題の回答が終了しました。以下のボタンを押して、回答結果をスプレッドシートへ送信してください。[cite: 13]
+			すべての問題の回答が終了しました。以下のボタンを押して、回答結果をスプレッドシートへ送信してください。
 		</p>
 
 		<div style="margin-top: 20px; text-align: center;">
@@ -632,8 +632,8 @@
 		<div style="background: #e8f4fd; border: 1px solid #bbe1fa; border-radius: 6px; padding: 15px; margin-bottom: 25px;">
 			<p style="margin: 0 0 8px 0; font-weight: bold; color: #004085;">⚠️ ご注意・ご案内</p>
 			<ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #004085;">
-				<li>すべての行程が完了し、<strong>スプレッドシートへのデータ送信が完了しました！</strong>[cite: 13]</li>
-				<li><strong>この回答一覧画面のスクリーンショットを撮影して保存してください。</strong>[cite: 13]</li>
+				<li>すべての行程が完了し、<strong>スプレッドシートへのデータ送信が完了しました！</strong></li>
+				<li><strong>この回答一覧画面のスクリーンショットを撮影して保存してください。</strong></li>
 			</ul>
 		</div>
 
@@ -697,8 +697,6 @@
 		},
 		{
 		no: "例3",
-		displayNo: "例3",
-		image: "images3/例3.png", // 念のためimages4に合わせるか元のままにするか。基本images4にする
 		displayNo: "例3",
 		image: "images4/例3.png",
 		komadoku: "先手銀・後手金桂1歩交換",
