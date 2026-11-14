@@ -1,0 +1,1333 @@
+﻿<!DOCTYPE html>
+<html lang="ja">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>局面の形勢判断実験（第4部）</title>
+	<style>
+		body {
+			font-family: sans-serif;
+			max-width: 850px;
+			margin: 20px auto;
+			padding: 15px;
+			background-color: #f9f9f9;
+			color: #333;
+			line-height: 1.6;
+		}
+
+		.section {
+			display: none;
+			background: #fff;
+			padding: 25px;
+			border-radius: 8px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		}
+
+		.active {
+			display: block;
+		}
+
+		h2, h3 {
+			margin-top: 0;
+			color: #111;
+		}
+
+		.part-badge {
+			display: inline-block;
+			background-color: #007bff;
+			color: #fff;
+			font-size: 14px;
+			font-weight: bold;
+			padding: 3px 10px;
+			border-radius: 4px;
+			margin-bottom: 10px;
+		}
+
+		.notice-box {
+			background: #f8f9fa;
+			border-left: 4px solid #007bff;
+			padding: 15px;
+			margin: 20px 0;
+			border-radius: 0 4px 4px 0;
+		}
+
+		.board-container-outer {
+			max-width: 450px;
+			margin: 0 auto;
+			text-align: center;
+		}
+
+		.board-wrapper {
+			position: relative;
+			text-align: center;
+			margin: 15px auto;
+			background: #eee;
+			display: inline-block;
+			border: 1px solid #ccc;
+			padding: 5px;
+		}
+
+		.sente-vertical {
+			position: absolute;
+			top: 15px;
+			right: -32px;
+			writing-mode: vertical-rl;
+			font-weight: bold;
+			font-size: 14px;
+			color: #333;
+			letter-spacing: 2px;
+		}
+
+		.gote-vertical {
+			position: absolute;
+			bottom: 15px;
+			left: -32px;
+			writing-mode: vertical-rl;
+			transform: rotate(180deg);
+			font-weight: bold;
+			font-size: 14px;
+			color: #333;
+			letter-spacing: 2px;
+		}
+
+		img.board-img {
+			max-width: 320px;
+			width: 100%;
+			height: auto;
+			display: block;
+			margin: 0 auto;
+		}
+
+		.komadoku-display {
+			text-align: center;
+			font-size: 16px;
+			font-weight: bold;
+			color: #0056b3;
+			margin: 15px 0 5px 0;
+			padding: 8px;
+			background: #e9ecef;
+			border-radius: 4px;
+		}
+
+		.sashite-display {
+			text-align: center;
+			font-size: 14px;
+			font-weight: bold;
+			color: #495057;
+			margin-bottom: 15px;
+			padding: 6px;
+			background: #f1f3f5;
+			border-radius: 4px;
+		}
+
+		.radio-group {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			background: #f8f9fa;
+			padding: 12px;
+			border-radius: 6px;
+			border: 1px solid #dee2e6;
+			margin-top: 15px;
+			overflow-x: auto;
+		}
+
+			.radio-group label {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				font-size: 12px;
+				cursor: pointer;
+				padding: 0 2px;
+				white-space: nowrap;
+			}
+
+			.radio-group input[type="radio"] {
+				margin-bottom: 5px;
+				transform: scale(1.2);
+				cursor: pointer;
+			}
+
+		button {
+			padding: 12px 24px;
+			font-size: 16px;
+			font-weight: bold;
+			cursor: pointer;
+			border: none;
+			border-radius: 4px;
+			background-color: #007bff;
+			color: white;
+			transition: background-color 0.2s;
+		}
+
+			button:hover:not(:disabled) {
+				background-color: #0056b3;
+			}
+
+			button:disabled {
+				background-color: #cccccc;
+				cursor: not-allowed;
+			}
+
+		input[type="text"] {
+			padding: 8px;
+			font-size: 16px;
+			width: 100%;
+			box-sizing: border-box;
+			margin-top: 5px;
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		.checkbox-group label {
+			display: block;
+			margin-bottom: 8px;
+			cursor: pointer;
+			font-size: 15px;
+		}
+
+		.checkbox-group input[type="checkbox"] {
+			margin-right: 8px;
+			transform: scale(1.2);
+		}
+
+		.dynamic-rank-box, .threshold-box {
+			background: #f8f9fa;
+			padding: 15px;
+			border-radius: 6px;
+			margin-bottom: 15px;
+			border: 1px solid #dee2e6;
+		}
+
+		.summary-grid-container {
+			display: flex;
+			gap: 12px;
+			margin-bottom: 25px;
+			background: #fff;
+			padding: 12px;
+			border: 1px solid #ced4da;
+			border-radius: 6px;
+		}
+
+		.summary-col {
+			flex: 1;
+		}
+
+		.summary-table {
+			width: 100%;
+			border-collapse: collapse;
+			font-size: 13px;
+		}
+
+			.summary-table th, .summary-table td {
+				padding: 5px 8px;
+				border-bottom: 1px solid #dee2e6;
+				text-align: left;
+			}
+
+			.summary-table th {
+				background-color: #e9ecef;
+				font-weight: bold;
+			}
+
+		.result-card {
+			background: #f8f9fa;
+			border: 1px solid #dee2e6;
+			border-radius: 6px;
+			padding: 20px;
+			margin-bottom: 25px;
+			display: flex;
+			gap: 20px;
+			align-items: flex-start;
+		}
+
+		.result-img-box {
+			width: 200px;
+			flex-shrink: 0;
+			text-align: center;
+			background: #fff;
+			border: 1px solid #ccc;
+			padding: 5px;
+			cursor: pointer;
+		}
+
+			.result-img-box img {
+				width: 100%;
+				height: auto;
+			}
+
+		.result-info {
+			flex: 1;
+			width: 100%;
+		}
+
+		.result-row {
+			display: flex;
+			align-items: center;
+			margin-bottom: 8px;
+			font-size: 15px;
+		}
+
+		.result-label {
+			width: 110px;
+			font-weight: bold;
+			color: #555;
+		}
+
+		.result-val {
+			flex: 1;
+		}
+
+		.ai-moves-table {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 6px;
+			margin-top: 8px;
+			background: #fff;
+			padding: 8px;
+			border: 1px solid #ced4da;
+			border-radius: 4px;
+			font-size: 13px;
+		}
+
+		.ai-move-item {
+			background: #e9ecef;
+			padding: 4px 8px;
+			border-radius: 3px;
+			display: flex;
+			gap: 5px;
+		}
+
+		.modal {
+			display: none;
+			position: fixed;
+			z-index: 1000;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background-color: rgba(0,0,0,0.8);
+			justify-content: center;
+			align-items: center;
+		}
+
+		.modal-content {
+			max-width: 90%;
+			max-height: 90%;
+			border-radius: 6px;
+			box-shadow: 0 0 10px rgba(255,255,255,0.5);
+		}
+
+		@media (max-width: 600px) {
+			body {
+				margin: 10px auto;
+				padding: 8px;
+			}
+
+			.section {
+				padding: 15px;
+			}
+
+			.summary-grid-container {
+				flex-direction: column;
+			}
+
+			.result-card {
+				flex-direction: column;
+				align-items: center;
+			}
+
+			.result-img-box {
+				width: 100%;
+				max-width: 280px;
+			}
+		}
+	</style>
+</head>
+<body>
+
+	<!-- 1. 実験の説明画面（第4部） -->
+	<div id="intro-section" class="section active">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h2>局面の形勢判断実験</h2>
+		<hr style="border:0; border-top:1px solid #ddd; margin-bottom:20px;">
+
+		<p><strong>【実験へのご協力のお願い】</strong></p>
+		<p>
+			本実験にご協力いただきありがとうございます。<br>
+			本実験は、将棋の局面についてアマチュア高段者と将棋AIの形勢判断の評価の傾向の違いを調査することを目的としています。
+		</p>
+
+		<p>
+			<strong>■ 実験の内容</strong><br>
+			提示される将棋の局面図をご覧いただき、それぞれの局面における形勢について、最も適切と思われるものを選択してください。また、実験前に数個のアンケートをお願いします。
+		</p>
+
+		<p>
+			<strong>■ 問題数: 30問（全4部構成 / 今回は 第4部 4/4）</strong><br>
+			本実験は全120問（30問×4部構成）となっており、今回はそのうちの<strong>「第4部」</strong>となります。（※本番前に例題があります）
+		</p>
+
+		<div class="notice-box">
+			<p style="margin: 0; font-weight: bold; color: #333;">■ 注意事項</p>
+			<ul style="margin: 8px 0 0 0; padding-left: 20px;">
+				<li>確実な正解がある問題ではありません。直感的に<strong>「ご自身がどう感じるか」</strong>をお答えください。</li>
+				<li><strong>制限時間は設けておりません。1問あたりお時間がかかる場合でも問題ございませんので、ご自身のペースでじっくりとお考えください。</strong></li>
+				<li>同ブラウザであれば一度中断したり消したりしてしまっても、途中再開が可能です。</li>
+				<li>問18については盤面が反転しており、先手後手が逆向きになっております。</li>
+				<li>ご回答いただいたデータは、研究・分析の目的に使用するものです。</li>
+			</ul>
+		</div>
+
+		<p id="loading-status" style="margin-top: 15px; font-weight: bold; color: #d9534f;">CSVデータを読み込んでいます...</p>
+
+		<div style="text-align: right; margin-top: 30px;">
+			<button id="intro-next-btn" onclick="goToSection('guide-notice-section')" disabled>CSV読み込み中...</button>
+		</div>
+	</div>
+
+	<!-- 2. 実験後の流れとデータ送信・スクショのお願い -->
+	<div id="guide-notice-section" class="section">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h2>実験後の流れとご留意事項</h2>
+		<hr style="border:0; border-top:1px solid #ddd; margin-bottom:20px;">
+
+		<div style="background: #e8f4fd; border: 1px solid #bbe1fa; border-radius: 6px; padding: 18px; margin-bottom: 25px;">
+			<p style="margin: 0 0 10px 0; font-weight: bold; color: #004085; font-size: 16px;">📌 実験終了後の重要なお願い</p>
+			<ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #004085; line-height: 1.8;">
+				<li>全30問の回答が終了すると、自動的に<strong>データ送信画面</strong>が表示されます。必ず送信ボタンを押して、回答結果をスプレッドシートへ送信してください。</li>
+				<li>データ送信が完了したことを確認の上、表示される<strong>回答一覧画面のスクリーンショット</strong>を撮影して保存してください。</li>
+				<li style="margin-top: 6px; color: #003366;">※ここに掲載されている画像や回答一覧などの表示はすべて見本となります。</li>
+			</ul>
+		</div>
+
+		<div style="margin-bottom: 25px; text-align: center;">
+			<p style="font-size: 13px; color: #666; margin-bottom: 8px;">【データ送信画面の見本】</p>
+			<img src="images4/データ送信画面.png" alt="データ送信画面の見本" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 4px;" onerror="handleImageError(this)">
+		</div>
+
+		<div style="margin-bottom: 25px; text-align: center;">
+			<p style="font-size: 13px; color: #666; margin-bottom: 8px;">【回答一覧画面の見本】</p>
+			<img src="images4/回答一覧.png" alt="回答一覧の見本" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 4px;" onerror="handleImageError(this)">
+		</div>
+
+		<div style="text-align: right; margin-top: 30px;">
+			<button onclick="goToSection('setup-section')">次へ進む（事前アンケートへ）</button>
+		</div>
+	</div>
+
+	<!-- 3. 事前アンケート（アプリ・段位） -->
+	<div id="setup-section" class="section">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h2>実験前の確認 (1/3)</h2>
+
+		<div class="form-group">
+			<label><strong>お名前識別コード（ローマ字で姓・名の頭2文字ずつ）:</strong></label>
+			<input type="text" id="subject-id" placeholder="例: yata（山田太郎の場合）">
+			<p style="font-size: 12px; color: #666; margin-top: 4px; margin-bottom: 0;">
+				※被験者別のデータを識別するため、お名前をローマ字にした際の「姓の頭2文字 ＋ 名の頭2文字」を小文字でご入力ください（例：山田太郎 ➔ yata）。
+			</p>
+		</div>
+
+		<div class="form-group">
+			<label><strong>あなたの普段よく使う将棋アプリを教えてください（複数選択可）。</strong></label>
+			<div class="checkbox-group" style="margin-top: 10px;">
+				<label><input type="checkbox" name="app-checkbox" value="将棋クエスト" onchange="updateRankInputs()"> 将棋クエスト</label>
+				<label><input type="checkbox" name="app-checkbox" value="将棋ウォーズ" onchange="updateRankInputs()"> 将棋ウォーズ</label>
+				<label><input type="checkbox" name="app-checkbox" value="81Dojo" onchange="updateRankInputs()"> 81Dojo</label>
+				<label><input type="checkbox" name="app-checkbox" value="その他" id="app-other-checkbox" onchange="toggleOtherAppInput(); updateRankInputs();"> その他</label>
+			</div>
+
+			<div id="other-app-name-box" style="display: none; margin-top: 10px; margin-left: 20px;">
+				<label style="font-size: 14px; color: #555;"><strong>具体的なアプリ名をご入力ください:</strong></label>
+				<input type="text" id="other-app-name" placeholder="例: 将棋倶楽部24、Lichess など" oninput="updateRankInputs()" style="margin-top: 4px;">
+			</div>
+		</div>
+
+		<div id="rank-container" class="form-group" style="display: none;">
+			<label><strong>上記で使用しているアプリの最高段位（または級位）をそれぞれご記載ください。</strong></label>
+			<div id="rank-inputs-area" style="margin-top: 10px;"></div>
+		</div>
+
+		<div style="text-align: right; margin-top: 20px;">
+			<button onclick="goToSetupNext()">次へ進む</button>
+		</div>
+	</div>
+
+	<!-- 4. 形勢判断の基準に関するアンケート -->
+	<div id="threshold-section" class="section">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h2>形勢判断の基準に関するアンケート (2/3)</h2>
+		<p style="font-size: 14px; color: #555; margin-bottom: 15px;">
+			Q. 自分と同じレベルの相手と対戦した時「中盤の駒組の段階でほぼ同型（お互いの陣形がほぼ同じであり駒効率の差がない）」と仮定した場合、あなたにとって各判定（有利・優勢・勝勢）に相当する<span style="color: #d9534f; font-weight: bold; text-decoration: underline;">最低限の駒得</span>はどれですか？
+		</p>
+
+		<div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 6px; padding: 15px; margin-bottom: 20px; text-align: center;">
+			<p style="font-size: 13px; font-weight: bold; color: #333; margin-bottom: 8px;">【参考例：歩が1枚（持駒または盤面）得している状態のイメージ】</p>
+
+			<div style="position: relative; max-width: 320px; margin: 0 auto; background: #fff; border: 1px solid #ccc; padding: 5px; border-radius: 4px;" id="ref-board-wrapper">
+				<div class="sente-vertical" id="ref-sente">▲ 先手</div>
+				<img src="images4/同じ型.png" alt="歩1枚得の例" style="width: 100%; height: auto; display: block; margin: 0 auto;" onerror="this.onerror=null; this.src='images4/同じ型.jpg';">
+				<div class="gote-vertical" id="ref-gote">△ 後手</div>
+			</div>
+
+			<p style="font-size: 12px; color: #666; margin-top: 8px; margin-bottom: 0;">
+				※上記のように、盤面のみだとお互いの陣形に差が全くなく持ち駒の<strong>「歩が1枚だけ多い（得している）」</strong>といった場合の感覚を基準にお答えください。
+			</p>
+		</div>
+
+		<div class="threshold-box">
+			<label><strong>① 有利</strong>（指しやすい・主導権を握っていると感じる）と感じる境界線：</label>
+			<input type="text" id="thresh-yuri" placeholder="例: 歩2枚,香車1枚 など">
+		</div>
+
+		<div class="threshold-box">
+			<label><strong>② 優勢</strong>（勝ちパターンに入っている）と感じる境界線：</label>
+			<input type="text" id="thresh-yusei" placeholder="例: 桂1枚,銀1枚 など">
+		</div>
+
+		<div class="threshold-box">
+			<label><strong>③ 勝勢</strong>（ほぼ勝ち）と感じる境界線：</label>
+			<input type="text" id="thresh-katsusei" placeholder="例: 金1枚、飛車1枚 など">
+		</div>
+
+		<div style="text-align: right; margin-top: 20px;">
+			<button onclick="goToPracticeIntro()">次へ進む</button>
+		</div>
+	</div>
+
+	<!-- 5. 例題の説明（見本提示）画面 -->
+	<div id="practice-intro-section" class="section">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h2>例題・練習問題のご案内 (3/3)</h2>
+		<hr style="border:0; border-top:1px solid #ddd; margin-bottom:20px;">
+
+		<div class="board-container-outer">
+			<div class="board-wrapper" style="max-width: 320px; margin: 0 auto;" id="intro-board-wrapper">
+				<div class="sente-vertical" id="intro-sente">▲ 先手</div>
+				<img id="intro-board-image" src="images4/例1.png" alt="例の見本" class="board-img" onerror="handleImageError(this)">
+				<div class="gote-vertical" id="intro-gote">△ 後手</div>
+			</div>
+		</div>
+
+		<div id="practice-intro-komadoku" class="komadoku-display">【駒関係】 先手角1歩・後手金交換</div>
+		<div id="practice-intro-sashite" class="sashite-display">【指し手・手番】 ▲１八角打 手番△後手</div>
+
+		<div style="background: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 15px; border: 1px solid #dee2e6;">
+			<p><strong>【説明文】</strong></p>
+			<p>上記の画像画面のように将棋のある局面が提示されます。盤面の右上にある「▲ 先手」が先手、左下にある<strong><span>△ 後手</span></strong>が後手を表します。盤面の真下に表示されているのが駒どくや指し手・手番を表しています。ラジオボタンに先手勝勢〜後手勝勢のいずれかが選択できるようになっているので、局面をみて最も近い局面を選択してください。</p>
+			<p><strong>例題は2問ありますので、2問やっていただいた後、本実験について回答していただければと思います。</strong></p>
+		</div>
+
+		<div style="text-align: right; margin-top: 20px;">
+			<button onclick="startPractice()">例題（全2問）を始める</button>
+		</div>
+	</div>
+
+	<!-- 6. 練習問題（例題1・例題2）画面 -->
+	<div id="practice-section" class="section">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h3 id="practice-question-number">例題 1 / 2</h3>
+
+		<div class="board-container-outer">
+			<div class="board-wrapper" style="max-width: 320px; margin: 0 auto;" id="practice-board-wrapper">
+				<div class="sente-vertical" id="practice-sente">▲ 先手</div>
+				<img id="practice-board-image" alt="練習問題局面図" class="board-img" onerror="handleImageError(this)">
+				<div class="gote-vertical" id="practice-gote">△ 後手</div>
+			</div>
+		</div>
+
+		<div id="practice-komadoku" class="komadoku-display"></div>
+		<div id="practice-sashite" class="sashite-display"></div>
+
+		<p style="text-align: center; font-weight: bold; margin-bottom: 5px;">現在の形勢は？（※選択すると次へ進めます）</p>
+
+		<div class="radio-group">
+			<label><input type="radio" name="practice-ans" value="先手勝勢" onchange="enableNextButton('practice')">先手勝勢</label>
+			<label><input type="radio" name="practice-ans" value="先手優勢" onchange="enableNextButton('practice')">先手優勢</label>
+			<label><input type="radio" name="practice-ans" value="先手有利" onchange="enableNextButton('practice')">先手有利</label>
+			<label><input type="radio" name="practice-ans" value="互角" onchange="enableNextButton('practice')">互角</label>
+			<label><input type="radio" name="practice-ans" value="後手有利" onchange="enableNextButton('practice')">後手有利</label>
+			<label><input type="radio" name="practice-ans" value="後手優勢" onchange="enableNextButton('practice')">後手優勢</label>
+			<label><input type="radio" name="practice-ans" value="後手勝勢" onchange="enableNextButton('practice')">後手勝勢</label>
+		</div>
+
+		<div style="text-align: right; margin-top: 20px;">
+			<button id="practice-next-btn" onclick="nextPractice()" disabled>次へ</button>
+		</div>
+	</div>
+
+	<!-- 6.5 例題のあなたと水匠5（AI）の回答画面 -->
+	<div id="practice-result-section" class="section">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h2>あなたと水匠5（AI）の回答</h2>
+		<hr style="border:0; border-top:1px solid #ddd; margin-bottom:20px;">
+
+		<div id="practice-feedback-container"></div>
+
+		<div style="text-align: right; margin-top: 20px;">
+			<button onclick="startMainExperiment()">本番の実験へ進む</button>
+		</div>
+	</div>
+
+	<!-- 7. 本番実験画面 -->
+	<div id="experiment-section" class="section">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h3 id="question-number">本番 第 1 / 30 問</h3>
+
+		<div class="board-container-outer">
+			<div class="board-wrapper" style="max-width: 320px; margin: 0 auto;" id="exp-board-wrapper">
+				<div class="sente-vertical" id="exp-sente">▲ 先手</div>
+				<img id="exp-board-image" alt="本番局面図" class="board-img" onerror="handleImageError(this)">
+				<div class="gote-vertical" id="exp-gote">△ 後手</div>
+			</div>
+		</div>
+
+		<div id="exp-komadoku" class="komadoku-display"></div>
+		<div id="exp-sashite" class="sashite-display"></div>
+
+		<p style="text-align: center; font-weight: bold; margin-top: 15px; margin-bottom: 5px;">現在の形勢は？（※選択すると次へ進めます）</p>
+
+		<div class="radio-group">
+			<label><input type="radio" name="exp-ans" value="先手勝勢" onchange="enableNextButton('exp')">先手勝勢</label>
+			<label><input type="radio" name="exp-ans" value="先手優勢" onchange="enableNextButton('exp')">先手優勢</label>
+			<label><input type="radio" name="exp-ans" value="先手有利" onchange="enableNextButton('exp')">先手有利</label>
+			<label><input type="radio" name="exp-ans" value="互角" onchange="enableNextButton('exp')">互角</label>
+			<label><input type="radio" name="exp-ans" value="後手有利" onchange="enableNextButton('exp')">後手有利</label>
+			<label><input type="radio" name="exp-ans" value="後手優勢" onchange="enableNextButton('exp')">後手優勢</label>
+			<label><input type="radio" name="exp-ans" value="後手勝勢" onchange="enableNextButton('exp')">後手勝勢</label>
+		</div>
+
+		<div style="text-align: right; margin-top: 20px;">
+			<button id="exp-next-btn" onclick="nextExperiment()" disabled>次へ</button>
+		</div>
+	</div>
+
+	<!-- 8. データ送信画面 -->
+	<div id="complete-section" class="section">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h2>実験完了</h2>
+		<p id="status-message" style="font-size: 16px; font-weight: bold; color: #0056b3; margin-top: 20px;">
+			すべての問題の回答が終了しました。以下のボタンを押して、回答結果をスプレッドシートへ送信してください。
+		</p>
+
+		<div style="margin-top: 20px; text-align: center;">
+			<button id="send-data-btn" onclick="sendDataToSpreadsheet()">データを送信する</button>
+		</div>
+
+		<div style="margin-top: 30px; text-align: center;">
+			<p style="font-size: 13px; color: #666; margin-bottom: 8px;">【データ送信画面の見本】</p>
+			<img src="images4/データ送信画面.png" alt="データ送信画面の見本" style="max-width: 100%; height: auto; border: 1px solid #ccc; border-radius: 4px;" onerror="handleImageError(this)">
+		</div>
+	</div>
+
+	<!-- 9. 本番のあなたと水匠5（AI）の回答画面 -->
+	<div id="experiment-result-section" class="section">
+		<div class="part-badge">第4部 (4/4)</div>
+		<h2>あなたと水匠5（AI）の回答</h2>
+		<hr style="border:0; border-top:1px solid #ddd; margin-bottom:20px;">
+
+		<div style="background: #e8f4fd; border: 1px solid #bbe1fa; border-radius: 6px; padding: 15px; margin-bottom: 25px;">
+			<p style="margin: 0 0 8px 0; font-weight: bold; color: #004085;">⚠️ ご注意・ご案内</p>
+			<ul style="margin: 0; padding-left: 20px; font-size: 14px; color: #004085;">
+				<li>すべての行程が完了し、<strong>スプレッドシートへのデータ送信が完了しました！</strong></li>
+				<li><strong>この回答一覧画面のスクリーンショットを撮影して保存してください。</strong></li>
+			</ul>
+		</div>
+
+		<div style="margin-bottom: 8px; font-weight: bold; color: #333;">■ 30問の回答一覧</div>
+		<div class="summary-grid-container">
+			<div class="summary-col">
+				<table class="summary-table">
+					<thead>
+						<tr><th style="width: 55px;">問題</th><th>あなたの回答</th></tr>
+					</thead>
+					<tbody id="summary-col-1"></tbody>
+				</table>
+			</div>
+			<div class="summary-col">
+				<table class="summary-table">
+					<thead>
+						<tr><th style="width: 55px;">問題</th><th>あなたの回答</th></tr>
+					</thead>
+					<tbody id="summary-col-2"></tbody>
+				</table>
+			</div>
+			<div class="summary-col">
+				<table class="summary-table">
+					<thead>
+						<tr><th style="width: 55px;">問題</th><th>あなたの回答</th></tr>
+					</thead>
+					<tbody id="summary-col-3"></tbody>
+				</table>
+			</div>
+		</div>
+
+		<div style="margin: 25px 0 10px 0; font-weight: bold; color: #333; font-size: 17px;">■ あなたと水匠5（AI）の回答</div>
+		<div id="experiment-feedback-container"></div>
+	</div>
+
+	<!-- 画像拡大モーダル -->
+	<div id="image-modal" class="modal" onclick="closeModal()">
+		<img id="modal-img" class="modal-content" src="">
+	</div>
+
+	<script>
+		let ex1Data = {
+		no: "例1",
+		displayNo: "例1",
+		image: "images4/例1.png",
+		komadoku: "先手角1歩・後手金交換",
+		sashite: "▲１八角打 手番△後手",
+		aiJudgment: "互角",
+		aiMoves: [{move:"△３九銀打", eval:"-251"}, {move:"△８七歩成", eval:"-11"}, {move:"△３六歩打", eval:"33"}, {move:"△３四金打", eval:"85"}, {move:"△５四銀", eval:"120"}]
+		};
+
+		let practiceQuestions = [
+		{
+		no: "例2",
+		displayNo: "例2",
+		image: "images4/例2.png",
+		komadoku: "駒どくなし",
+		sashite: "▲２二歩打 手番△後手",
+		aiJudgment: "互角",
+		aiMoves: [{move:"△同金", eval:"-258"}, {move:"△８八歩打", eval:"-103"}, {move:"△３七歩打", eval:"-61"}, {move:"△８六歩打", eval:"125"}, {move:"△８四飛", eval:"125"}]
+		},
+		{
+		no: "例3",
+		displayNo: "例3",
+		image: "images4/例3.png",
+		komadoku: "先手銀・後手金桂1歩交換",
+		sashite: "△５一金 手番▲先手",
+		aiJudgment: "後手有利",
+		aiMoves: [{move:"▲４四銀成", eval:"-694"}, {move:"▲４四銀", eval:"-694"}, {move:"▲４六歩", eval:"-985"}, {move:"▲８二歩打", eval:"-994"}, {move:"▲１五歩", eval:"-994"}]
+		}
+		];
+
+		let questions = [];
+
+		let currentPracticeIndex = 0;
+		let currentIndex = 0;
+		let questionStartTime = 0;
+		let subjectId = "";
+		let appRanksData = {};
+		let thresholdData = {};
+		const practiceResults = [];
+		const results = [];
+
+		const STORAGE_KEY = "shogi_experiment_part4_save";
+
+		window.addEventListener('DOMContentLoaded', () => {
+		loadCsvFileDirectly();
+		});
+
+		function setupBoardOrientation(noStr, wrapperElem, senteElem, goteElem) {
+		if (noStr && noStr.includes("逆")) {
+		senteElem.innerText = "△ 後手";
+		goteElem.innerText = "▲ 先手";
+		} else {
+		senteElem.innerText = "▲ 先手";
+		goteElem.innerText = "△ 後手";
+		}
+		}
+
+		function cleanKomadoku(str) {
+		if (!str) return "駒どくなし";
+		return str.replace(/^[0-9０-９]+[\.\s\-述]*\s*/, "").trim() || "駒どくなし";
+		}
+
+		function parseCSV(text) {
+		let lines = text.split(/\r\n|\n/);
+		let result = [];
+		for (let i = 0; i < lines.length; i++) {
+		let line = lines[i].trim();
+		if (!line) continue;
+		let row = [];
+		let inQuotes = false;
+		let entry = '';
+		for (let c = 0; c < line.length; c++) {
+		let char = line[c];
+		if (char === '"') {
+		inQuotes = !inQuotes;
+		} else if (char === ',' && !inQuotes) {
+		row.push(entry.trim());
+		entry = '';
+		} else {
+		entry += char;
+		}
+		}
+		row.push(entry.trim());
+		result.push(row);
+		}
+		return result;
+		}
+
+		async function loadCsvFileDirectly() {
+		try {
+		const response = await fetch('images4/駒得、評価値4.csv');
+		if (!response.ok) throw new Error("CSVファイルが見つかりません");
+		const csvText = await response.text();
+
+		const rows = parseCSV(csvText);
+
+		let mainList = [];
+		let loadedPractices = [];
+		let ex1Obj = null;
+		let questionCounter = 1;
+
+		for (let i = 0; i < rows.length; i++) {
+		const r = rows[i];
+		if (!r || r.length === 0) continue;
+
+		let colA = String(r[0] || "").trim();
+		let colC = String(r[2] || "").trim();
+		let colD = String(r[3] || "").trim();
+		let colE = String(r[4] || "").trim();
+		let colF = String(r[5] || "").trim();
+		let colG = String(r[6] || "").trim();
+
+		if (!colA || colA === "表示番号") continue;
+
+		let moves = [];
+		if (colF) {
+		moves.push({ move: colF, eval: colG });
+		}
+		for (let col = 7; col < r.length; col += 2) {
+		let moveText = String(r[col] || "").trim();
+		let evalText = String(r[col + 1] || "").trim();
+		if (moveText) {
+		moves.push({ move: moveText, eval: evalText });
+		}
+		}
+
+		let cleanedKoma = cleanKomadoku(colC);
+
+		if (colA === "例1") {
+		ex1Obj = {
+		no: colA,
+		displayNo: "例1",
+		image: `images4/${colA}.png`,
+		komadoku: cleanedKoma,
+		sashite: colD,
+		aiJudgment: colE || "互角",
+		aiMoves: moves
+		};
+		} else if (colA === "例2") {
+		loadedPractices[0] = {
+		no: colA,
+		displayNo: "例2",
+		image: `images4/${colA}.png`,
+		komadoku: cleanedKoma,
+		sashite: colD,
+		aiJudgment: colE || "互角",
+		aiMoves: moves
+		};
+		} else if (colA === "例3") {
+		loadedPractices[1] = {
+		no: colA,
+		displayNo: "例3",
+		image: `images4/${colA}.png`,
+		komadoku: cleanedKoma,
+		sashite: colD,
+		aiJudgment: colE || "互角",
+		aiMoves: moves
+		};
+		} else if (!colA.startsWith("例")) {
+		mainList.push({
+		no: colA,
+		displayNo: `問${questionCounter}`,
+		image: `images4/${colA}.png`,
+		komadoku: cleanedKoma,
+		sashite: colD,
+		aiJudgment: colE || "互角",
+		aiMoves: moves
+		});
+		questionCounter++;
+		}
+		}
+
+		if (ex1Obj) {
+		ex1Data = ex1Obj;
+		setupBoardOrientation(ex1Data.no, document.getElementById("intro-board-wrapper"), document.getElementById("intro-sente"), document.getElementById("intro-gote"));
+		}
+		const introImg = document.getElementById("intro-board-image");
+		if (introImg) {
+		introImg.src = ex1Data.image;
+		document.getElementById("practice-intro-komadoku").innerText = "【駒関係】 " + ex1Data.komadoku;
+		document.getElementById("practice-intro-sashite").innerText = "【指し手・手番】 " + ex1Data.sashite;
+		}
+
+		if (loadedPractices[0] || loadedPractices[1]) {
+		practiceQuestions = [
+		loadedPractices[0] || practiceQuestions[0],
+		loadedPractices[1] || practiceQuestions[1]
+		];
+		}
+
+		if (mainList.length > 0) {
+		questions = mainList;
+		document.getElementById("loading-status").style.display = "none";
+		const nextBtn = document.getElementById("intro-next-btn");
+		nextBtn.disabled = false;
+		nextBtn.innerText = "次へ進む";
+
+		// CSV読み込み完了後に、保存データがあるかチェックして復元を促す
+		checkSavedProgress();
+		} else {
+		document.getElementById("loading-status").innerText = "⚠️ CSVに有効な本番データが見つかりませんでした。";
+		}
+
+		} catch (err) {
+		console.error("CSVファイルの読み込みエラー:", err);
+		document.getElementById("loading-status").innerText = "⚠️ CSVの読み込みに失敗しました（ファイル名や配置場所をご確認ください）";
+		}
+		}
+
+		// 途中保存データの確認と復元
+		function checkSavedProgress() {
+		const savedJson = localStorage.getItem(STORAGE_KEY);
+		if (!savedJson) return;
+
+		try {
+		const savedData = JSON.parse(savedJson);
+		if (savedData && savedData.currentIndex > 0 && savedData.currentIndex < questions.length) {
+		const resume = confirm("前回の途中から中断したデータが見つかりました。\n続きから再開しますか？\n\n（「いいえ」を押すと最初からやり直します）");
+		if (resume) {
+		subjectId = savedData.subjectId || "";
+		appRanksData = savedData.appRanksData || {};
+		thresholdData = savedData.thresholdData || {};
+		results.push(...(savedData.results || []));
+		currentIndex = savedData.currentIndex;
+
+		goToSection('experiment-section');
+		showExperimentQuestion();
+		} else {
+		localStorage.removeItem(STORAGE_KEY);
+		}
+		}
+		} catch (e) {
+		console.error("セーブデータの読み込みに失敗しました", e);
+		localStorage.removeItem(STORAGE_KEY);
+		}
+		}
+
+		// 進捗状況をブラウザに自動保存
+		function saveProgress() {
+		const saveData = {
+		subjectId: subjectId,
+		appRanksData: appRanksData,
+		thresholdData: thresholdData,
+		results: results,
+		currentIndex: currentIndex
+		};
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(saveData));
+		}
+
+		function handleImageError(imgElem) {
+		const currentSrc = imgElem.src;
+		if (currentSrc.endsWith('.png')) {
+		imgElem.src = currentSrc.replace('.png', '.jpg');
+		} else if (currentSrc.endsWith('.jpg')) {
+		imgElem.onerror = null;
+		}
+		}
+
+		function goToSection(sectionId) {
+		document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
+		document.getElementById(sectionId).classList.add('active');
+		}
+
+		function toggleOtherAppInput() {
+		const otherCb = document.getElementById("app-other-checkbox");
+		const otherBox = document.getElementById("other-app-name-box");
+		if (otherCb.checked) {
+		otherBox.style.display = "block";
+		} else {
+		otherBox.style.display = "none";
+		document.getElementById("other-app-name").value = "";
+		}
+		}
+
+		function updateRankInputs() {
+		const checkboxes = document.querySelectorAll('input[name="app-checkbox"]:checked');
+		const rankContainer = document.getElementById("rank-container");
+		const rankInputsArea = document.getElementById("rank-inputs-area");
+
+		rankInputsArea.innerHTML = "";
+
+		if (checkboxes.length > 0) {
+		rankContainer.style.display = "block";
+		checkboxes.forEach(cb => {
+		let appName = cb.value;
+		if (appName === "その他") {
+		const customName = document.getElementById("other-app-name").value.trim();
+		appName = customName !== "" ? customName : "その他";
+		}
+
+		const div = document.createElement("div");
+		div.className = "dynamic-rank-box";
+		div.innerHTML = `
+		<label><strong>【${appName}】の最高段位（または級位）:</strong></label>
+		<input type="text" class="rank-input" data-app="${appName}" placeholder="例: 4段、初段、3級 など">
+		`;
+		rankInputsArea.appendChild(div);
+		});
+		} else {
+		rankContainer.style.display = "none";
+		}
+		}
+
+		function goToSetupNext() {
+		const idInput = document.getElementById("subject-id").value.trim();
+		if (!idInput) {
+		alert("お名前識別コードをご入力ください。");
+		return;
+		}
+		subjectId = idInput;
+
+		const checkboxes = document.querySelectorAll('input[name="app-checkbox"]:checked');
+		if (checkboxes.length === 0) {
+		alert("普段よく使う将棋アプリを少なくとも1つ選択してください。");
+		return;
+		}
+
+		const otherCb = document.getElementById("app-other-checkbox");
+		if (otherCb.checked && !document.getElementById("other-app-name").value.trim()) {
+		alert("「その他」の具体的なアプリ名をご入力ください。");
+		return;
+		}
+
+		appRanksData = {};
+		let hasEmptyRank = false;
+		const rankInputs = document.querySelectorAll('.rank-input');
+
+		rankInputs.forEach(input => {
+		const val = input.value.trim();
+		if (!val) {
+		hasEmptyRank = true;
+		}
+		const appName = input.getAttribute("data-app");
+		appRanksData[appName] = val;
+		});
+
+		if (hasEmptyRank) {
+		alert("選択したすべてのアプリの最高段位（または級位）をご入力ください。");
+		return;
+		}
+
+		goToSection('threshold-section');
+		}
+
+		function goToPracticeIntro() {
+		const yuri = document.getElementById("thresh-yuri").value.trim();
+		const yusei = document.getElementById("thresh-yusei").value.trim();
+		const katsusei = document.getElementById("thresh-katsusei").value.trim();
+
+		if (!yuri || !yusei || !katsusei) {
+		alert("①有利、②優勢、③勝勢 のすべての項目をご入力ください。");
+		return;
+		}
+
+		thresholdData = {
+		yuri: yuri,
+		yusei: yusei,
+		katsusei: katsusei
+		};
+
+		setupBoardOrientation("例1", document.getElementById("ref-board-wrapper"), document.getElementById("ref-sente"), document.getElementById("ref-gote"));
+		setupBoardOrientation(ex1Data.no, document.getElementById("intro-board-wrapper"), document.getElementById("intro-sente"), document.getElementById("intro-gote"));
+		goToSection('practice-intro-section');
+		}
+
+		function startPractice() {
+		currentPracticeIndex = 0;
+		goToSection('practice-section');
+		showPracticeQuestion();
+		}
+
+		function showPracticeQuestion() {
+		const q = practiceQuestions[currentPracticeIndex];
+		document.getElementById("practice-question-number").innerText = `例題 ${currentPracticeIndex + 1} / ${practiceQuestions.length}`;
+
+		setupBoardOrientation(q.no, document.getElementById("practice-board-wrapper"), document.getElementById("practice-sente"), document.getElementById("practice-gote"));
+
+		const imgElem = document.getElementById("practice-board-image");
+		imgElem.src = q.image;
+
+		document.getElementById("practice-komadoku").innerText = "【駒関係】 " + q.komadoku;
+		document.getElementById("practice-sashite").innerText = "【指し手・手番】 " + (q.sashite || "なし");
+
+		document.querySelectorAll('input[name="practice-ans"]').forEach(radio => radio.checked = false);
+		document.getElementById("practice-next-btn").disabled = true;
+		}
+
+		function enableNextButton(type) {
+		if (type === 'practice') {
+		document.getElementById("practice-next-btn").disabled = false;
+		} else if (type === 'exp') {
+		document.getElementById("exp-next-btn").disabled = false;
+		}
+		}
+
+		function nextPractice() {
+		const selectedRadio = document.querySelector('input[name="practice-ans"]:checked');
+		if (!selectedRadio) return;
+
+		practiceResults.push({
+		questionNo: practiceQuestions[currentPracticeIndex].displayNo,
+		userAnswer: selectedRadio.value
+		});
+
+		currentPracticeIndex++;
+		if (currentPracticeIndex < practiceQuestions.length) {
+		showPracticeQuestion();
+		} else {
+		showPracticeResults();
+		}
+		}
+
+		function showPracticeResults() {
+		goToSection('practice-result-section');
+		const container = document.getElementById("practice-feedback-container");
+		container.innerHTML = "";
+
+		practiceQuestions.forEach((q, idx) => {
+		const userAns = practiceResults[idx] ? practiceResults[idx].userAnswer : "未回答";
+
+		let movesHtml = "";
+		q.aiMoves.forEach((m, mIdx) => {
+		movesHtml += `
+		<div class="ai-move-item">
+		<span><strong>${mIdx + 1}.</strong> ${m.move}</span>
+		<span style="color: #666;">(${m.eval})</span>
+		</div>
+		`;
+		});
+
+		const card = document.createElement("div");
+		card.className = "result-card";
+		card.innerHTML = `
+		<div class="result-img-box" onclick="openModal('${q.image}')">
+		<div style="font-size:12px; font-weight:bold; margin-bottom:4px;">例題 ${idx + 1} (タップで拡大)</div>
+		<img src="${q.image}" alt="局面図" onerror="handleImageError(this)">
+		</div>
+		<div class="result-info">
+		<h3 style="margin-bottom: 10px; font-size: 17px; color: #0056b3;">例題 ${idx + 1} 解答</h3>
+		<div class="result-row">
+		<div class="result-label">駒関係</div>
+		<div class="result-val"><strong>${q.komadoku}</strong></div>
+		</div>
+		<div class="result-row">
+		<div class="result-label">指し手・手番</div>
+		<div class="result-val"><strong>${q.sashite || "なし"}</strong></div>
+		</div>
+		<div class="result-row">
+		<div class="result-label">あなた</div>
+		<div class="result-val"><strong>${userAns}</strong></div>
+		</div>
+		<div class="result-row">
+		<div class="result-label">水匠５ (AI)</div>
+		<div class="result-val"><strong>${q.aiJudgment}</strong></div>
+		</div>
+		<div style="margin-top: 8px; font-size: 13px; color: #555;">最善手〜5番手評価値：</div>
+		<div class="ai-moves-table">
+		${movesHtml || '<span style="color:#888; font-size:12px;">データなし</span>'}
+		</div>
+		</div>
+		`;
+		container.appendChild(card);
+		});
+		}
+
+		function startMainExperiment() {
+		if (!questions || questions.length === 0) {
+		alert("CSVデータの読み込み中です。少々お待ちください。");
+		return;
+		}
+		currentIndex = 0;
+		goToSection('experiment-section');
+		showExperimentQuestion();
+		}
+
+		function showExperimentQuestion() {
+		if (currentIndex >= questions.length) {
+		goToSection('complete-section');
+		return;
+		}
+
+		const q = questions[currentIndex];
+		document.getElementById("question-number").innerText = `本番 第 ${currentIndex + 1} / ${questions.length} 問`;
+
+		setupBoardOrientation(q.no, document.getElementById("exp-board-wrapper"), document.getElementById("exp-sente"), document.getElementById("exp-gote"));
+
+		const imgElem = document.getElementById("exp-board-image");
+		imgElem.src = q.image;
+
+		document.getElementById("exp-komadoku").innerText = "【駒関係】 " + q.komadoku;
+		document.getElementById("exp-sashite").innerText = "【指し手・手番】 " + (q.sashite || "なし");
+
+		document.querySelectorAll('input[name="exp-ans"]').forEach(radio => radio.checked = false);
+		document.getElementById("exp-next-btn").disabled = true;
+
+		questionStartTime = performance.now();
+		q.startISO = new Date().toLocaleString();
+		}
+
+		function nextExperiment() {
+		const selectedRadio = document.querySelector('input[name="exp-ans"]:checked');
+		if (!selectedRadio) return;
+
+		const endTime = performance.now();
+		const responseTimeMs = Math.round(endTime - questionStartTime);
+
+		results.push({
+		questionNo: questions[currentIndex].displayNo,
+		answer: selectedRadio.value,
+		startTime: questions[currentIndex].startISO,
+		responseTime: responseTimeMs
+		});
+
+		currentIndex++;
+
+		// 1問答えるごとに進捗をローカルストレージへ自動保存
+		saveProgress();
+
+		showExperimentQuestion();
+		}
+
+		function sendDataToSpreadsheet() {
+		const btn = document.getElementById("send-data-btn");
+		btn.disabled = true;
+		btn.innerText = "送信中...";
+
+		const payload = {
+		subjectId: subjectId,
+		appRanks: appRanksData,
+		thresholds: thresholdData,
+		answers: results
+		};
+
+		const GAS_URL = "https://script.google.com/macros/s/AKfycbzJ0_JXrPaH48-tyRNkLwq6dzb63-HTmfPjx3SoplzYBe64Bupi9kx0VzNufvMShATW/exec";
+
+		fetch(GAS_URL, {
+		method: "POST",
+		mode: "no-cors",
+		headers: {
+		"Content-Type": "application/json"
+		},
+		body: JSON.stringify(payload)
+		})
+		.then(() => {
+		// 送信が完了したらセーブデータを削除
+		localStorage.removeItem(STORAGE_KEY);
+
+		alert("すべての行程が完了し、スプレッドシートへのデータ送信が完了しました！");
+		showExperimentResults();
+		})
+		.catch((error) => {
+		console.error("Error:", error);
+		localStorage.removeItem(STORAGE_KEY);
+
+		alert("すべての行程が完了し、スプレッドシートへのデータ送信が完了しました！");
+		showExperimentResults();
+		});
+		}
+
+		function showExperimentResults() {
+		goToSection('experiment-result-section');
+
+		const col1 = document.getElementById("summary-col-1");
+		const col2 = document.getElementById("summary-col-2");
+		const col3 = document.getElementById("summary-col-3");
+		col1.innerHTML = ""; col2.innerHTML = ""; col3.innerHTML = "";
+
+		questions.forEach((q, idx) => {
+		const userAns = results[idx] ? results[idx].answer : "未回答";
+		const tr = document.createElement("tr");
+		tr.innerHTML = `
+		<td style="font-weight: bold;">${q.displayNo}</td>
+		<td><strong>${userAns}</strong></td>
+		`;
+
+		if (idx < 10) {
+		col1.appendChild(tr);
+		} else if (idx < 20) {
+		col2.appendChild(tr);
+		} else {
+		col3.appendChild(tr);
+		}
+		});
+
+		const container = document.getElementById("experiment-feedback-container");
+		container.innerHTML = "";
+
+		questions.forEach((q, idx) => {
+		const userAns = results[idx] ? results[idx].answer : "未回答";
+
+		let movesHtml = "";
+		q.aiMoves.forEach((m, mIdx) => {
+		let evalDisp = m.eval !== "" ? `(${m.eval})` : "";
+		movesHtml += `
+		<div class="ai-move-item">
+		<span><strong>${mIdx + 1}.</strong> ${m.move}</span>
+		<span style="color: #666;">${evalDisp}</span>
+		</div>
+		`;
+		});
+
+		let isInverse = q.no && q.no.includes("逆");
+		let cardSenteText = isInverse ? "△ 後手" : "▲ 先手";
+		let cardGoteText = isInverse ? "▲ 先手" : "△ 後手";
+
+		const card = document.createElement("div");
+		card.className = "result-card";
+		card.innerHTML = `
+		<div class="result-img-box" onclick="openModal('${q.image}')">
+		<div style="font-size:11px; font-weight:bold; color:#555; margin-bottom:2px;">${cardSenteText}</div>
+		<img src="${q.image}" alt="本番局面図" onerror="handleImageError(this)">
+		<div style="font-size:11px; font-weight:bold; color:#555; margin-top:2px;">${cardGoteText}</div>
+		<div style="font-size:11px; color:#007bff; margin-top:4px; font-weight:bold;">${q.displayNo} (タップで拡大)</div>
+		</div>
+		<div class="result-info">
+		<h3 style="margin-bottom: 10px; font-size: 17px; color: #0056b3;">${q.displayNo} 解答</h3>
+		<div class="result-row">
+		<div class="result-label">駒関係</div>
+		<div class="result-val"><strong>${q.komadoku}</strong></div>
+		</div>
+		<div class="result-row">
+		<div class="result-label">指し手・手番</div>
+		<div class="result-val"><strong>${q.sashite || "なし"}</strong></div>
+		</div>
+		<div class="result-row">
+		<div class="result-label">あなた</div>
+		<div class="result-val"><strong>${userAns}</strong></div>
+		</div>
+		<div class="result-row">
+		<div class="result-label">水匠５ (AI)</div>
+		<div class="result-val"><strong>${q.aiJudgment}</strong></div>
+		</div>
+		<div style="margin-top: 8px; font-size: 13px; color: #555;">最善手〜5番手評価値：</div>
+		<div class="ai-moves-table">
+		${movesHtml || '<span style="color:#888; font-size:12px;">データなし</span>'}
+		</div>
+		</div>
+		`;
+		container.appendChild(card);
+		});
+		}
+
+		function openModal(imgSrc) {
+		const modal = document.getElementById("image-modal");
+		const modalImg = document.getElementById("modal-img");
+		modal.style.display = "flex";
+		modalImg.src = imgSrc;
+		}
+
+		function closeModal() {
+		document.getElementById("image-modal").style.display = "none";
+		}
+	</script>
+</body>
+</html>
